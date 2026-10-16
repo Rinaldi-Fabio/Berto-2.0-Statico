@@ -1,0 +1,335 @@
+/*
+ * Da Berto — what theme.json can't express.
+ * Colours, fonts, sizes and spacing live in theme.json; this file adds layout details.
+ */
+
+:root {
+	--db-line: var(--wp--preset--color--linea);
+	--db-radius: 4px;
+}
+
+html {
+	scroll-padding-top: calc(var(--wp--custom--header-height) + 1rem);
+}
+
+h1, h2, h3 { text-wrap: balance; }
+p { text-wrap: pretty; overflow-wrap: break-word; }
+
+::selection {
+	background: var(--wp--preset--color--brace);
+	color: var(--wp--preset--color--notte);
+}
+
+:where(a, button, [tabindex]):focus-visible {
+	outline: 3px solid currentColor;
+	outline-offset: 4px;
+}
+
+/* Sections carry their own padding: no gaps between header, main and footer. */
+.wp-site-blocks { padding-block: 0; }
+.wp-site-blocks > * + *,
+.wp-block-post-content > .alignfull + .alignfull { margin-block-start: 0; }
+
+/* Links inside running text. */
+p a {
+	text-underline-offset: 0.2em;
+	text-decoration-thickness: 1px;
+}
+p a:hover { text-decoration-thickness: 2px; }
+.db-more a { font-weight: 600; }
+
+/* Photos: rectangular, same proportions in every section. */
+.wp-block-image img {
+	border-radius: var(--db-radius);
+}
+.wp-block-column > .wp-block-image img {
+	width: 100%;
+	aspect-ratio: 4 / 3;
+	object-fit: cover;
+}
+
+/* Line drawings (the Bertine from the printed menu): never cropped, no rounded corners. */
+.wp-block-column > .wp-block-image.db-illustrazione img {
+	width: 100%;
+	max-width: 380px;
+	aspect-ratio: 750 / 345;
+	object-fit: contain;
+	border-radius: 0;
+}
+.db-illustrazione { margin-top: var(--wp--preset--spacing--40); }
+@media (max-width: 781px) {
+	.wp-block-column > .wp-block-image.db-illustrazione img { max-width: 280px; }
+}
+
+/* Small heading above a value (Orari, Dove siamo, Telefono). */
+.db-label {
+	font-family: var(--wp--preset--font-family--body);
+	font-size: 0.9375rem;
+	font-weight: 700;
+	letter-spacing: 0;
+	color: var(--wp--preset--color--arenaria);
+	margin-block-end: 0.35rem;
+}
+.is-style-sezione-chiara .db-label { color: var(--wp--preset--color--mattone); }
+
+.wp-element-button {
+	transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease;
+}
+
+/* Phones: content buttons stacked, full width (easier to tap). Header and bottom bar excluded. */
+@media (max-width: 599px) {
+	body main .wp-block-buttons.is-layout-flex {
+		flex-direction: column;
+		align-items: stretch;
+		gap: 0.75rem;
+	}
+	main .wp-block-button,
+	main .wp-block-button__link { width: 100%; }
+	main .wp-block-button__link { justify-content: center; }
+}
+
+/* ---------- Header ---------- */
+
+.db-header-wrap {
+	position: sticky;
+	top: var(--wp-admin--admin-bar--height, 0px);
+	z-index: 50;
+}
+.db-header { border-bottom: 1px solid var(--db-line); }
+.db-header__inner { min-height: var(--wp--custom--header-height); }
+.db-brand .wp-block-site-title a { text-decoration: none; }
+.db-brand__tagline {
+	margin: 0;
+	font-size: 0.75rem;
+	color: var(--wp--preset--color--arenaria);
+}
+.db-nav a { text-decoration: none; }
+.db-nav a:hover { text-decoration: underline; text-underline-offset: 0.3em; }
+.db-header__book .wp-element-button {
+	padding: 0.6rem 1.1rem;
+	font-size: 0.875rem;
+}
+
+/* Mobile menu overlay. */
+.db-nav .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__responsive-container-content,
+.db-nav .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation__container {
+	align-items: flex-start !important;
+	padding-top: 1rem;
+}
+.db-nav .wp-block-navigation__responsive-container.is-menu-open .wp-block-navigation-item__content {
+	font-size: 1.375rem;
+	padding-block: 0.35rem;
+}
+
+/* Core prints `body .is-layout-flex { display: flex }`: match its specificity. */
+@media (max-width: 899px) {
+	body .db-header .db-brand__text { display: none; }
+}
+/* Up to 781px the bottom bar already has Prenota. */
+@media (max-width: 781px) {
+	body .db-header .db-header__book { display: none; }
+}
+@media (max-width: 599px) {
+	.db-header__inner { min-height: 64px; }
+}
+
+/* ---------- Mobile call / book bar ---------- */
+
+.db-mobile-bar { display: none; }
+@media (max-width: 781px) {
+	body { padding-bottom: calc(68px + env(safe-area-inset-bottom)); }
+	.db-mobile-bar {
+		display: block;
+		position: fixed;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 40;
+		max-width: none !important;
+		margin: 0 !important;
+		padding: 0.5rem 0.75rem calc(0.5rem + env(safe-area-inset-bottom));
+		border-top: 1px solid var(--db-line);
+	}
+	.db-mobile-bar .wp-block-buttons { gap: 0.5rem; }
+	.db-mobile-bar .wp-block-button { flex: 1 1 0; min-width: 0; }
+	.db-mobile-bar .wp-element-button { width: 100%; min-height: 46px; }
+	.has-modal-open .db-mobile-bar { display: none; }
+}
+
+/* ---------- Instagram / Facebook: small fixed icons, bottom right ---------- */
+
+body .db-social.wp-block-social-links {
+	position: fixed;
+	right: 1rem;
+	bottom: 1rem;
+	z-index: 30;
+	flex-direction: column;
+	gap: 0.5rem;
+	max-width: none !important;
+	margin: 0 !important;
+	font-size: 16px; /* icon size */
+}
+body .db-social .wp-block-social-link {
+	background: var(--wp--preset--color--notte-alta);
+	color: var(--wp--preset--color--arenaria);
+	box-shadow: inset 0 0 0 1px var(--db-line);
+	transition: none;
+}
+body .db-social .wp-block-social-link:hover {
+	transform: none;
+	color: var(--wp--preset--color--brace);
+}
+body .db-social .wp-block-social-link-anchor { padding: 0.5rem; }
+/* Phones: inside the Chiama/Prenota bar, on its left, so they never cover the text. */
+@media (max-width: 781px) {
+	body .db-social.wp-block-social-links {
+		flex-direction: row;
+		left: 0.75rem;
+		right: auto;
+		bottom: calc(11px + env(safe-area-inset-bottom)); /* centred on the 46px buttons */
+		z-index: 41;
+	}
+	body .db-social .wp-block-social-link-anchor { padding: 0.75rem; } /* 40px targets */
+	.db-mobile-bar { padding-left: calc(0.75rem + 88px + 0.5rem); }
+}
+.has-modal-open .db-social { display: none; }
+
+/* ---------- Sections ---------- */
+
+.db-info__grid {
+	padding-block: var(--wp--preset--spacing--30);
+	border-block: 1px solid var(--db-line);
+}
+.db-phone { font-size: 1.25rem; font-variant-numeric: tabular-nums; }
+.db-phone a { text-decoration: none; }
+
+/* Family: name | role. */
+.db-row {
+	gap: 1rem;
+	padding-block: 0.75rem;
+	border-bottom: 1px solid var(--db-line);
+}
+.db-row > p { margin: 0; }
+.db-row__name { flex: 0 0 5.5rem; }
+
+/* Flours: plain list, 3 columns on desktop, 1 on phones. */
+.db-farine__griglia {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 0 var(--wp--preset--spacing--40);
+	margin-top: var(--wp--preset--spacing--40);
+}
+.db-farine__griglia > * { margin-block: 0 !important; }
+.db-farina {
+	padding-block: 1rem;
+	border-top: 1px solid var(--db-line);
+}
+.db-farina > * { margin: 0; }
+.db-farina__nome { font-size: 1.25rem !important; }
+.db-farina__origine {
+	font-family: var(--wp--preset--font-family--body);
+	font-size: 0.8125rem;
+	color: var(--wp--preset--color--mattone);
+}
+@media (max-width: 781px) {
+	.db-farine__griglia { grid-template-columns: 1fr; }
+}
+
+/* Menu rows: name and ingredients | price. */
+.db-lista { border-top: 1px solid var(--db-line); }
+.db-piatto {
+	gap: 1.25rem;
+	padding-block: 0.9rem;
+	border-bottom: 1px solid var(--db-line);
+}
+.db-piatto__testo { min-width: 0; }
+.db-piatto__nome { font-size: 1.25rem !important; margin: 0; }
+.db-piatto__desc { margin: 0; max-width: 52ch; opacity: 0.85; }
+.db-piatto__prezzo {
+	margin: 0;
+	white-space: nowrap;
+	font-variant-numeric: tabular-nums;
+	font-weight: 600;
+}
+.is-style-sezione-chiara { --db-line: #cdbca7; }
+
+/* Menu lists in two columns, a step below their heading row. */
+.db-menu__colonne { margin-top: var(--wp--preset--spacing--40); }
+
+/* Four-column rows (Prenota info, footer): core keeps them in one row from 782px, 2 × 2 on tablets.
+   !important beats core's nowrap !important and the inline flex-basis of a column with a set width. */
+@media (min-width: 782px) and (max-width: 1023px) {
+	.db-colonne-4 { flex-wrap: wrap !important; }
+	.db-colonne-4 > .wp-block-column { flex-basis: calc(50% - var(--wp--preset--spacing--40)) !important; }
+}
+
+/* Menu sub-sections ("Le pizze della tradizione", "Piadine"…) and small notes (coperto, *congelato). */
+.db-sottotitolo {
+	font-size: var(--wp--preset--font-size--x-large) !important;
+	margin-block: var(--wp--preset--spacing--40) 0.5rem !important;
+}
+.wp-block-column > .db-sottotitolo:first-child { margin-block-start: 0 !important; }
+.db-nota { opacity: 0.8; font-style: italic; }
+
+.db-recensioni { border-block: 1px solid var(--db-line); text-align: center; }
+
+/* Footer. */
+.db-footer { border-top: 1px solid var(--db-line); }
+.db-footer a { text-decoration: none; }
+.db-footer a:hover { text-decoration: underline; }
+.db-footer .wp-block-site-logo { margin-bottom: 0.75rem; }
+.db-footer__claim { margin: 0; color: var(--wp--preset--color--arenaria); }
+.db-footer p { margin-block: 0.25rem; }
+.db-footer__legal p { margin: 0; }
+
+/* ---------- Text pages (privacy, cookie) ---------- */
+
+.db-prose h2 {
+	font-size: var(--wp--preset--font-size--x-large);
+	margin-block-start: 2.25rem;
+}
+.db-prose h3 {
+	font-size: var(--wp--preset--font-size--large);
+	margin-block-start: 1.5rem;
+}
+.db-prose a { color: var(--wp--preset--color--mattone); }
+.db-prose table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 0.875rem;
+}
+/* Tables leave the reading column but stop before the full grid. */
+.db-prose > .wp-block-table.alignwide { max-width: 1100px; }
+.db-prose th,
+.db-prose td {
+	border: 1px solid var(--db-line);
+	padding: 0.6rem 0.75rem;
+	text-align: left;
+	vertical-align: top;
+}
+/* Phones: no room for 4 columns. Each row becomes a stacked card, first cell as its title. */
+@media (max-width: 599px) {
+	.db-prose thead {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+	}
+	.db-prose table,
+	.db-prose tbody,
+	.db-prose tr,
+	.db-prose td { display: block; width: auto; }
+	.db-prose .wp-block-table { overflow-x: visible; }
+	.db-prose tr {
+		border: 1px solid var(--db-line);
+		padding: 0.75rem;
+		margin-bottom: 0.75rem;
+	}
+	.db-prose td { border: 0; padding: 0.15rem 0; }
+	.db-prose td:first-child { font-weight: 700; overflow-wrap: anywhere; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*, *::before, *::after { transition: none !important; }
+}
